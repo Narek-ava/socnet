@@ -13,7 +13,6 @@ services:
             - .env
         depends_on:
             - mysql
-            - redis
         networks:
             - app-network
 
