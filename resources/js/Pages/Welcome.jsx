@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import {Head, Link, usePage} from '@inertiajs/react';
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     const handleImageError = () => {
@@ -11,6 +11,8 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
             ?.classList.add('!flex-row');
         document.getElementById('background')?.classList.add('!hidden');
     };
+    const role = usePage().props.auth;
+    const translations = usePage().props.translations;
 
     return (
         <>
@@ -40,10 +42,10 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                             <nav className="-mx-3 flex flex-1 justify-end">
                                 {auth.user ? (
                                     <Link
-                                        href={route('dashboard')}
+                                        href={role.is_admin ?route('admin.requests.index'):route('dashboard')}
                                         className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                                     >
-                                        Dashboard
+                                        {translations.dashboard}
                                     </Link>
                                 ) : (
                                     <>
@@ -51,13 +53,13 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                             href={route('login')}
                                             className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                                         >
-                                            Log in
+                                            {translations.login}
                                         </Link>
                                         <Link
                                             href={route('register')}
                                             className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                                         >
-                                            Register
+                                            {translations.register}
                                         </Link>
                                     </>
                                 )}

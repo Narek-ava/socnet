@@ -11,6 +11,6 @@ class AdminRequestsController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Admin/Requests/Index');
+        return Inertia::render('Admin/Requests/Requests');
     }
 }

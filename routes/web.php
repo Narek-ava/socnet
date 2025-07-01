@@ -56,7 +56,7 @@ Route::middleware(['auth', 'admin', 'verified'])->prefix('admin')->group(functio
 });
 
 Broadcast::routes();
-require base_path('routes/channels.php'); // 👈 чтобы Laravel знал о каналах
+require base_path('routes/channels.php');
 
 require __DIR__.'/auth.php';
 
