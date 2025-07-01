@@ -26,8 +26,8 @@ export default function AuthenticatedLayout({ header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
+                                    href={role.is_admin?route('admin.dashboard.index'):route('dashboard')}
+                                    active={role.is_admin?route().current('admin.dashboard.index'):route().current('dashboard')}
                                     className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
                                 >
                                     {translations.dashboard}
@@ -39,6 +39,15 @@ export default function AuthenticatedLayout({ header, children }) {
                                         className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
                                     >
                                         {translations.requests}
+                                    </NavLink>
+                                )}
+                                {role.is_admin && (
+                                    <NavLink
+                                        href={route('admin.logs.index')}
+                                        active={route().current('admin.logs.index')}
+                                        className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
+                                    >
+                                        {translations.logs}
                                     </NavLink>
                                 )}
                             </div>
@@ -125,16 +134,23 @@ export default function AuthenticatedLayout({ header, children }) {
                 <div className={`${showingNavigationDropdown ? 'block' : 'hidden'} sm:hidden`}>
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
+                            href={role.is_admin ? route('admin.dashboard.index') :route('admin.dashboard.index')}
+                            active={role.is_admin ? route().current('admin.dashboard.index') :route().current('admin.dashboard.index')}
                         >
-                            Dashboard
+                            {translations.dashboard}
                         </ResponsiveNavLink>
                         { role.is_admin && ( <ResponsiveNavLink
                             href={route('admin.requests.index')}
                             active={route().current('admin.requests.index')}
                         >
                             {translations.requests}
+
+                        </ResponsiveNavLink>
+                        )} { role.is_admin && ( <ResponsiveNavLink
+                            href={route('admin.logs.index')}
+                            active={route().current('admin.logs.index')}
+                        >
+                            {translations.logs}
 
                         </ResponsiveNavLink>
                         )}

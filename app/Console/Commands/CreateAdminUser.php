@@ -19,7 +19,11 @@ class CreateAdminUser extends Command
 
         $user = User::updateOrCreate(
             ['email' => $email],
-            ['name' => 'Admin', 'password' => bcrypt($password)]
+            [
+                'name' => 'Admin',
+                'password' => bcrypt($password),
+                'email_verified_at' => now()
+                ]
         );
 
         $user->syncRoles([RoleEnum::ADMIN->value]);
