@@ -11,5 +11,22 @@ return [
     'profile' => '个人资料',
     'dark_mode' => '深色模式',
     'light_mode' => '浅色模式',
-
+    'email' => '电子邮件',
+    'name' => '姓名',
+    'password' => '密码',
+    'password_confirm' => '确认密码',
+    'remember' => '记住我',
+    'forgotten' => '忘记密码？',
+    'already_registered' => '已经注册？',
+    'forgot_description' => '忘记密码了？没关系。只需告诉我们您的电子邮件地址，我们会向您发送一个重置密码的链接，您可以通过它设置新密码。',
+    'email_reset_link' => '发送密码重置链接',
+    'reset_password' => '重置密码',
+    'confirm' => '确认',
+    'confirm_message' => '这是应用程序的安全区域。请在继续之前确认您的密码。',
+    'email_verification_title' => '电子邮件验证',
+    'email_verification_message' => '感谢您的注册！在开始之前，请点击我们刚刚发送给您的链接以验证您的电子邮件地址。如果您没有收到电子邮件，我们将很乐意再次发送。',
+    'verification_link_sent' => '新的验证链接已发送至您在注册时提供的电子邮件地址。',
+    'resend_verification_email' => '重新发送验证邮件',
+    'button' => [
+    ],
 ];

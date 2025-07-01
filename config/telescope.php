@@ -95,6 +95,7 @@ return [
     'middleware' => [
         'web',
         Authorize::class,
+        \App\Http\Middleware\AdminOnly::class
     ],
 
     /*
