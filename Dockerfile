@@ -12,9 +12,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     rm -rf /var/lib/apt/lists/*
 
 # Установка PHP расширений, включая redis
-RUN pecl install redis \
-    && docker-php-ext-enable redis \
-    && docker-php-ext-install exif pdo pdo_mysql zip gd pcntl
+RUN  docker-php-ext-install exif pdo pdo_mysql zip gd pcntl
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminRequestsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,7 +28,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
+Route::post('/user-offline', function (Illuminate\Http\Request $request) {
+    broadcast(new \App\Events\UserOffline($request->user_id));
+    return response()->noContent();
+});
+Route::post('/user-offline', function (Request $request) {
+    broadcast(new \App\Events\UserOffline($request->input('user_id')));
+    return response()->noContent();
+});
 Route::get('/set-locale/{locale}', function ($locale) {
     if (!in_array($locale, ['en', 'ru', 'zh'])) {
         abort(400); // запрещаем неизвестные языки
@@ -45,6 +53,8 @@ Route::get('/clear-locale', function () {
 
 Route::middleware(['auth', 'admin', 'verified'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
+        broadcast(new \App\Events\UserOnline(auth()->id()));
+
         return Inertia::render('Dashboard');
     })->name('admin.dashboard.index');
 
@@ -52,6 +62,7 @@ Route::middleware(['auth', 'admin', 'verified'])->prefix('admin')->group(functio
 
     Route::get('/requests', [AdminRequestsController::class, 'index'])->name('admin.requests.index');
 //    Route::get('/chat', [ChatController::class, 'index'])->name('admin.chat.index');
+    Route::get('/users', [\App\Http\Controllers\UserController::class, 'index'])->name('admin.users.index');
 
 });
 

@@ -1,5 +1,6 @@
 <?php
 return [
+    'users' => '用户',
     'welcome' => '欢迎！',
     'dashboard' => '仪表板',
     'logs' => '日志',
@@ -9,6 +10,7 @@ return [
     'logout' => '退出',
     'register' => '注册',
     'profile' => '个人资料',
+    'status' => '状态',
     'dark_mode' => '深色模式',
     'light_mode' => '浅色模式',
     'email' => '电子邮件',

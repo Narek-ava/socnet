@@ -4,30 +4,59 @@ import NavLink from '@/Components/NavLink';
 import ThemeProvider from '@/Components/ThemeProvider';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
     const role = usePage().props.auth;
     const translations = usePage().props.translations;
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
+    useEffect(() => {
+        const channel = window.Echo.join('online-users')
+            .here(users => {
+                setOnlineUsers(users);
+            })
+            .joining(user => {
+                setOnlineUsers(prev => {
+                    if (!prev.some(u => u.id === user.id)) {
+                        return [...prev, user];
+                    }
+                    return prev;
+                });
+            })
+            .leaving(user => {
+                console.log('User left:', user);
+                setOnlineUsers(prev => prev.filter(u => u.id !== user.id));
+            });
+        const handleUnload = () => {
+            navigator.sendBeacon('/user-offline', JSON.stringify({ user_id: user.id }));
+        };
+        window.addEventListener('beforeunload', handleUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleUnload);
+            window.Echo.leave('online-users');
+        };
+    }, []);
     return (
-        <div className="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
+        <div
+            className="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
             <nav className="border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
                                 <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800 dark:text-white" />
+                                    <ApplicationLogo
+                                        className="block h-9 w-auto fill-current text-gray-800 dark:text-white"/>
                                 </Link>
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={role.is_admin?route('admin.dashboard.index'):route('dashboard')}
-                                    active={role.is_admin?route().current('admin.dashboard.index'):route().current('dashboard')}
+                                    href={role.is_admin ? route('admin.dashboard.index') : route('dashboard')}
+                                    active={role.is_admin ? route().current('admin.dashboard.index') : route().current('dashboard')}
                                     className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
                                 >
                                     {translations.dashboard}
@@ -49,7 +78,15 @@ export default function AuthenticatedLayout({ header, children }) {
                                     >
                                         {translations.logs}
                                     </NavLink>
-                                )}
+                                )}{role.is_admin && (
+                                <NavLink
+                                    href={route('admin.users.index')}
+                                    active={route().current('admin.users.index')}
+                                    className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
+                                >
+                                    {translations.users}
+                                </NavLink>
+                            )}
                             </div>
                         </div>
 
@@ -93,7 +130,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         </Dropdown.Link>
 
                                         <div className="mt-2">
-                                            <ThemeProvider />
+                                            <ThemeProvider/>
                                         </div>
                                     </Dropdown.Content>
                                 </Dropdown>
@@ -134,26 +171,26 @@ export default function AuthenticatedLayout({ header, children }) {
                 <div className={`${showingNavigationDropdown ? 'block' : 'hidden'} sm:hidden`}>
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={role.is_admin ? route('admin.dashboard.index') :route('admin.dashboard.index')}
-                            active={role.is_admin ? route().current('admin.dashboard.index') :route().current('admin.dashboard.index')}
+                            href={role.is_admin ? route('admin.dashboard.index') : route('admin.dashboard.index')}
+                            active={role.is_admin ? route().current('admin.dashboard.index') : route().current('admin.dashboard.index')}
                         >
                             {translations.dashboard}
                         </ResponsiveNavLink>
-                        { role.is_admin && ( <ResponsiveNavLink
-                            href={route('admin.requests.index')}
-                            active={route().current('admin.requests.index')}
-                        >
-                            {translations.requests}
+                        {role.is_admin && (<ResponsiveNavLink
+                                href={route('admin.requests.index')}
+                                active={route().current('admin.requests.index')}
+                            >
+                                {translations.requests}
 
-                        </ResponsiveNavLink>
-                        )} { role.is_admin && ( <ResponsiveNavLink
+                            </ResponsiveNavLink>
+                        )} {role.is_admin && (<ResponsiveNavLink
                             href={route('admin.logs.index')}
                             active={route().current('admin.logs.index')}
                         >
                             {translations.logs}
 
                         </ResponsiveNavLink>
-                        )}
+                    )}
                     </div>
 
                     <div className="border-t border-gray-200 dark:border-gray-700 pb-1 pt-4">
@@ -179,7 +216,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                             </ResponsiveNavLink>
 
-                            <ThemeProvider />
+                            <ThemeProvider/>
                         </div>
                     </div>
                 </div>
@@ -193,7 +230,9 @@ export default function AuthenticatedLayout({ header, children }) {
                 </header>
             )}
 
-            <main>{children}</main>
+            <main>
+                {typeof children === 'function' ? children({onlineUsers}) : children}
+            </main>
         </div>
     );
 }

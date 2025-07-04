@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\SomeTestEvent;
+use App\Events\SomeTestPrivateEvent;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -28,6 +29,7 @@ class SendTestEvent extends Command
     public function handle()
     {
         event(new SomeTestEvent());
+        event(new SomeTestPrivateEvent());
         $this->info('Event sent!');
     }
 }

@@ -37,11 +37,10 @@ class SetLocale
         if ($ip === '172.18.0.1' || $ip === '127.0.0.1') {
             $ip = '146.70.52.62';
         }
-        Log::info('Referer IP',[$ip]);
         try {
             $position = Location::get($ip);
             $country = $position?->countryCode ?? null;
-		Log::info('Referer IP',[$ip,$country]);
+		    Log::info('Referer IP',[$ip,$country]);
         } catch (\Exception $e) {
             $country = null;
         }

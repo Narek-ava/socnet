@@ -39,6 +39,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         'password',
         'remember_token',
     ];
+    protected $with = ['roles'];
 
     /**
      * Get the attributes that should be cast.
@@ -55,5 +56,9 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function isAdmin(): bool
     {
         return $this->hasRole(RoleEnum::ADMIN->value);
+    }
+    public function getFirstRoleNameAttribute()
+    {
+        return $this->roles->first()?->name;
     }
 }

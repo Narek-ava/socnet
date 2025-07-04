@@ -68,3 +68,9 @@ window.Echo.channel('some-channel')
         console.log('Получено событие SomeTestEvent:', e);
         alert('Новое событие с данными: 📡📡📡📡📡📡📡📡📡📡📡📡📡📡📡📡 ' + JSON.stringify(e.data));
     });
+window.Echo.private('some-channel')
+    .listen('.SomePrivateTestEvent', (e) => {
+        console.log('📡 Получено событие:', e.data);
+        alert('Новое событие с данными: 📡📡📡📡📡📡📡📡📡📡📡📡📡📡📡📡 ' + JSON.stringify(e.data));
+
+    });

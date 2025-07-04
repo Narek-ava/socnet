@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'users'=>'Users',
     'welcome' => 'Welcome!',
     'dashboard' => 'Dashboard',
     'logs' => 'Logs',
@@ -10,6 +11,7 @@ return [
     'logout' => 'Logout',
     'register' => 'Register',
     'profile' => 'Profile',
+    'status' => 'Status',
     'dark_mode' => 'Dark Mode',
     'light_mode' => 'Light mode',
     'email' => 'Email',
